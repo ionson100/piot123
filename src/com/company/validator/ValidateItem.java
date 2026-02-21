@@ -15,6 +15,8 @@ class ValidateItem extends BaseValidator {
         MOutItems mOut=new MOutItems();
         mOut.km=code.cis;
 
+        //TODO вопрос
+        // Стоит ли это делать здесь? Ане при добавления в чек?
         if(checkLocalSales(code.cis)==true){
             mOut.errorMessage="Продукт с кодом: "+code.cis+ " был продан ранее.";
             mOut.permitSale=false;

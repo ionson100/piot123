@@ -206,8 +206,32 @@ public class FactoryTest {
 
         {
             MInItems items=new MInItems();
-            items.km="0104670540176099215'W9Um\u001D93dGVz";//
+            items.km="0104670540176099215'W9Um\u001D93dGVz";
             hashMap.put("00",items);
+        }
+        {
+            MInItems items=new MInItems();
+            items.km="0104670540176099215'W9Um\u001D93dGVz";
+            items.idCase="5000";
+            items.descriptionCase ="Дополнительная марка для тестирования 5000 ошибки.";
+            items.km="0104670540176099215'W9Um\u001D93dGVz";
+            hashMap.put("5000",items);
+        }
+        {
+            MInItems items=new MInItems();
+            items.km="0104813445003293215TmiV,g\u001D93dGVz";
+            items.idCase="514";
+            items.descriptionCase ="Таймаут соединения. Не удалось получить ответ от ГИС МТ или ЛМ ЧЗ за 1800мс.";
+            items.km="0104670540176099215'W9Um\u001D93dGVz";
+            hashMap.put("514",items);
+        }
+        {
+            MInItems items=new MInItems();
+            items.km="0104670540176099215!pGKy\u001D93dGVz";
+            items.idCase="504";
+            items.descriptionCase ="Gateway Timeout - превышено время ожидания ответа от upstream сервиса.";
+            items.km="0104670540176099215'W9Um\u001D93dGVz";//
+            hashMap.put("504",items);
         }
         return this;
 

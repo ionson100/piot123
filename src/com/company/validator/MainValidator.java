@@ -42,15 +42,11 @@ public class MainValidator extends BaseValidator {
                     m.permitSale=true;
                     mOut.itemsList.add(m);
                 }
-                return mOut;
+                break;
             }
             case 200:{
                 JsonBody_v2 body_v2= new Gson().fromJson(json,JsonBody_v2.class);
-
-
-
                 CodesResponse codeBox =body_v2.codesResponse.get(0);
-
                 if(codeBox.code!=0||!codeBox.description.equals("ok")){
                     mOut.totalErrorMessage="Произошла ошибка, сервер вернул code:"+codeBox.code+" description:"+codeBox.description;
                     return mOut;
@@ -79,17 +75,16 @@ public class MainValidator extends BaseValidator {
 
                     MOutItems mOutInner=new ValidateItem().validate(itemCode);
                     MInItems mIn= UtilsPiot.getMInItem(mInItems,mOutInner.km);
-
-                    //"0104670540176099215'W9Um"
                     mOutInner.descriptionCase =mIn!=null?mIn.descriptionCase :null;
                     mOutInner.idCase=mIn!=null?mIn.idCase:null;
-
-
                     mOutInner.tag_1265=  "UUID="+ codeBox.reqId+
                                 "&Time="+ codeBox.reqTimestamp;
-
                     mOut.itemsList.add(mOutInner);
                 }
+                break;
+            }
+            default:{
+                mOut.totalErrorMessage="Произошла ошибка, сервер вернул код:"+statusResponse+System.lineSeparator()+json;
             }
         }
         return mOut;

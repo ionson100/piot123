@@ -32,6 +32,9 @@ class MainRequestPiot {
 
     }
 
+    /**
+     * Тело запроса
+     */
     public class TempBodyPiot{
         List<String> codes= new ArrayList<>();
         ClientInfo client_info;
@@ -40,22 +43,13 @@ class MainRequestPiot {
 
 
         HttpsURLConnection conn = null;
-
-
         int status;
         TempBodyPiot tempBody=new TempBodyPiot();
-
-
         try {
-
-
-
-
-
+            // формируем тело запроса
             tempBody.codes=new ArrayList<>();
-
             for (MInItems tempProductKmPiot : mInItems) {
-
+                //добавляем коды as Base64
                 tempBody.codes.add(UtilsPiot.CodeToBase64(tempProductKmPiot.km));
             }
             tempBody.client_info=new ClientInfo();
@@ -66,6 +60,7 @@ class MainRequestPiot {
 
 
             Gson gson=new Gson();
+            //формируем json
             String jsonBody=gson.toJson(tempBody);
 
             byte[] postDataBytes=jsonBody.getBytes(StandardCharsets.UTF_8);
@@ -82,27 +77,24 @@ class MainRequestPiot {
             conn.setRequestProperty("Content-Type", UtilsPiot.CONTENT_TYPE);
             conn.setDoInput(true);
             conn.setDoOutput(true);
-
             conn.getOutputStream().write(postDataBytes);
             conn.connect();
+            //получаем статус
             status = conn.getResponseCode();
 
-
-
-
-
-
+            //получаем ответ
             String response=UtilsPiot.GetHttpBody(conn);
 
-
-
+            //проверяем ответ
             MOut mOut=new MainValidator().validate(status,response,mInItems);
 
+            //если все ок, то возвращаем результат
             iResult.action(mOut);
 
 
 
         } catch (java.net.SocketTimeoutException e) {
+            // получаем таймаут, лезем в локальный модуль
             MainRequestLocalModule.LocalResponse localResponse= new MainRequestLocalModule().check(mInItems);
             MOut mOut=new MOut();
             if(localResponse.totalError!=null){
@@ -112,37 +104,45 @@ class MainRequestPiot {
             }else {
 
 
-                mOut.itemsList=new ArrayList<>(localResponse.codeItems.size());
-                for (MainRequestLocalModule.LocalResponseCodeItem codeItem : localResponse.codeItems) {
-                    MOutItems mOutItems=new MOutItems();
-                    MInItems mIn= UtilsPiot.getMInItem(mInItems,codeItem.cis);
+                // формируем ответ
 
-                    mOutItems.descriptionCase =mIn!=null?mIn.descriptionCase :null;
-                    mOutItems.idCase=mIn!=null?mIn.idCase:null;
-                    mOutItems.km=mIn!=null?mIn.km:codeItem.cis;
-                    mOutItems.tag_1265=codeItem.tag_1265;
-                    mOutItems.permitSale=codeItem.permitSale;
-                    mOutItems.errorMessage=codeItem.errorMessage;
-                    mOut.itemsList.add(mOutItems);
+                    mOut.itemsList=new ArrayList<>(localResponse.codeItems.size());
+                try{
+                    for (MainRequestLocalModule.LocalResponseCodeItem codeItem : localResponse.codeItems) {
+                        MOutItems mOutItems=new MOutItems();
+                        MInItems mIn= UtilsPiot.getMInItem(mInItems,codeItem.cis);
+
+                        mOutItems.descriptionCase =mIn!=null?mIn.descriptionCase :null;
+                        mOutItems.idCase=mIn!=null?mIn.idCase:null;
+                        mOutItems.km=mIn!=null?mIn.km:codeItem.cis;
+                        mOutItems.tag_1265=codeItem.tag_1265;
+                        mOutItems.permitSale=codeItem.permitSale;
+                        mOutItems.errorMessage=codeItem.errorMessage;
+                        mOut.itemsList.add(mOutItems);
+                    }
+                    //возвращаем результат
+                    iResult.action(mOut);
+                }catch (Exception e1){
+                    mOut.totalErrorMessage="Ошибка при формировании результата из локального модуля. "+e1.getMessage();
+                    iResult.action(mOut);
+                    e.printStackTrace();
                 }
 
-                iResult.action(mOut);
 
             }
 
         } catch (Exception e) {
 
+            //если ошибка в ответе piot, то возвращаем ошибку
             MOut mOut=new MOut();
             mOut.totalErrorMessage=e.getMessage();
             iResult.action(mOut);
             e.printStackTrace();
         } finally {
-
+            // закрываем соединение
             if (conn != null) {
                 conn.disconnect();
             }
-
-
         }
     }
 }
