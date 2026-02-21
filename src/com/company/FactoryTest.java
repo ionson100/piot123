@@ -203,6 +203,12 @@ public class FactoryTest {
             items.descriptionCase ="Запрет продажи НСП по минимальной розничной цене";
             hashMap.put("5.26",items);
         }
+
+        {
+            MInItems items=new MInItems();
+            items.km="0104670540176099215'W9Um\u001D93dGVz";//
+            hashMap.put("00",items);
+        }
         return this;
 
 

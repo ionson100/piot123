@@ -14,12 +14,13 @@ public class Main {
 
         List<MInItems> mInItems;
         try {
-            mInItems = new FactoryTest().initFactory().buildRequest("5.2");
+            mInItems = new FactoryTest().initFactory().buildRequest("5.1","5.2","5.3","5.4","5.5","5.6","5.7","5.8","5.9","5.10","5.11","5.12","5.14");
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
+        // 13 15 16
         List<MInItems> finalMInItems = mInItems;
         CompletableFuture.runAsync(() -> {
             // Выполнение без возврата результата
@@ -33,12 +34,14 @@ public class Main {
                         return;
                     }
                     for (MOutItems outItem : mOut.itemsList) {
-                        System.out.println("case:"+outItem.idCase+
-                                "  sale:"+outItem.permitSale+
-                                "  МРЦ чек:"+outItem.mrcTobacco+"руб."+
-                                "  errorMessage:"+outItem.errorMessage+
-                                "  caseName:"+outItem.descriptionCase+System.lineSeparator()+
-                                "1265:"+outItem.tag_1265);
+                        System.out.println(System.lineSeparator()+
+                                "Кейс теста:"+outItem.idCase+System.lineSeparator()+
+                                "Код макаровки:"+outItem.km+System.lineSeparator()+
+                                "Разрешение продать:"+outItem.permitSale+System.lineSeparator()+
+                                "Цена чек:"+outItem.mrcTobacco+" руб."+System.lineSeparator()+
+                                "Причина отказа:"+outItem.errorMessage+System.lineSeparator()+
+                                "Название кейса теста:"+outItem.descriptionCase+System.lineSeparator()+
+                                "Тэг 1265:"+outItem.tag_1265);
                     }
                 }
 

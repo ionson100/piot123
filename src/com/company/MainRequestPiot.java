@@ -111,6 +111,7 @@ class MainRequestPiot {
 
             }else {
 
+
                 mOut.itemsList=new ArrayList<>(localResponse.codeItems.size());
                 for (MainRequestLocalModule.LocalResponseCodeItem codeItem : localResponse.codeItems) {
                     MOutItems mOutItems=new MOutItems();
@@ -118,7 +119,7 @@ class MainRequestPiot {
 
                     mOutItems.descriptionCase =mIn!=null?mIn.descriptionCase :null;
                     mOutItems.idCase=mIn!=null?mIn.idCase:null;
-                    mOutItems.km=codeItem.cis;
+                    mOutItems.km=mIn!=null?mIn.km:codeItem.cis;
                     mOutItems.tag_1265=codeItem.tag_1265;
                     mOutItems.permitSale=codeItem.permitSale;
                     mOutItems.errorMessage=codeItem.errorMessage;

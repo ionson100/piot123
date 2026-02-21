@@ -25,7 +25,7 @@ public class UtilsPiot {
     public final static  String ID="18aa4ecf-523c-4c2a-a759-d0435f4c0408";
 
     public final static String CONTENT_TYPE="application/json";
-    public static final String TOKEN ="4415ec48-8096-4a03-ab46-49bac3557f86";// "448ffa4c-cf94-401f-a526-e0c436f5f5fd";
+    public static final String TOKEN ="4415ec48-8096-4a03-ab46-49bac3557f86";
     public static final String AUTHORIZATION ="Basic YnNyOjMxMjg3Mw==";
 
     public static String CodeToBase64(String km){

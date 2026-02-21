@@ -111,7 +111,7 @@ import java.util.List;
 
             if(result.code!=0){
 
-                localResponse.totalError="Ощибка запроса локального модуля. Code:" + result.code+" message:" +result.description;
+                localResponse.totalError="Ошибка запроса локального модуля. Code:" + result.code+" message:" +result.description;
                 return localResponse;
             }
 

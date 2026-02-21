@@ -32,7 +32,7 @@ class ValidateItem extends BaseValidator {
             return mOut;
         }
         if(code.verified==false){
-            mOut.errorMessage=code.getErrorMessage("Криптохвост кода не прошел проверку");
+            mOut.errorMessage=code.getErrorMessage("Крипто хвост кода не прошел проверку");
             mOut.permitSale=false;
             return mOut;
         }

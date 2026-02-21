@@ -82,7 +82,7 @@ class ValidatePrice {
 
                     if(code.mrp >price){
                         mOut.permitSale=false;
-                        mOut.errorMessage="Цена еденицы товара:"+price/100+"руб. меньше допустимой минимальной цены:"+code.mrp/100+"руб";
+                        mOut.errorMessage="Цена единицу товара:"+price/100+"руб. меньше допустимой минимальной цены:"+code.mrp/100+"руб";
                         break;
                     }
 
@@ -101,7 +101,7 @@ class ValidatePrice {
     }
 
     /**
-     * Получение цены за еденицу товар из базы данных в копейках
+     * Получение цены за единицу товар из базы данных в копейках
      * @param gtin gtin товара
      * @return цена в копейках
      */

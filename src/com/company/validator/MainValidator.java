@@ -89,19 +89,9 @@ public class MainValidator extends BaseValidator {
                                 "&Time="+ codeBox.reqTimestamp;
 
                     mOut.itemsList.add(mOutInner);
-
                 }
-
             }
-
-
         }
         return mOut;
-
     }
-
-
-
-
-
 }
