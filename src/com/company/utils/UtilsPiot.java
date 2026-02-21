@@ -26,7 +26,7 @@ public class UtilsPiot {
 
     public final static String CONTENT_TYPE="application/json";
     public static final String TOKEN ="4415ec48-8096-4a03-ab46-49bac3557f86";
-    public static final String AUTHORIZATION ="Basic YnNyOjMxMjg3Mw==";
+    public static final String AUTHORIZATION ="Basic xxxxxxx";
 
     public static String CodeToBase64(String km){
         byte[] originalBytes = km.getBytes(StandardCharsets.UTF_8);
