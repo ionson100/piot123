@@ -13,65 +13,101 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Основной валидатор ответа от PIOT.
+ * Преобразует JSON-ответ в структуру MOut, проверяя статус и детали каждого кода маркировки.
+ */
 public class MainValidator extends BaseValidator {
 
-
-
     /**
-     * Точка входа проверки
-     * @param json тело ответа;
-     * @param mInItems Массив входных данных
-     * @return Массив выходных данных
+     * Основной метод валидации ответа от сервера PIOT.
+     *
+     * @param json     JSON-ответ от сервера
+     * @param mInItems Входные данные (тестовые кейсы с КИЗ и метаданными)
+     * @return MOut — результат проверки
+     * @throws ParseException если разбор даты или данных не удался
      */
-    public MOut validate( String json, List<MInItems> mInItems) throws ParseException {
+    public MOut validate(String json, List<MInItems> mInItems) throws ParseException {
+        MOut mOut = new MOut();
+        mOut.itemsList = new ArrayList<>(mInItems.size());
 
-
-        MOut mOut=new MOut();
-        mOut.itemsList=new ArrayList<>(mInItems.size());
-
-        JsonBody_v2 body_v2= new Gson().fromJson(json,JsonBody_v2.class);
-        if(body_v2.code!=null){
-            mOut.totalErrorMessage="Неизвестная ошибка при статусе 200. code:"+body_v2.code+" json:"+json;
+        // Парсинг JSON
+        JsonBody_v2 bodyV2;
+        try {
+            bodyV2 = new Gson().fromJson(json, JsonBody_v2.class);
+        } catch (Exception e) {
+            mOut.totalErrorMessage = "Ошибка парсинга JSON: " + e.getMessage();
             return mOut;
         }
-        CodesResponse codeBox =body_v2.codesResponse.get(0);
-        if(codeBox.code!=0||!codeBox.description.equals("ok")){
-            mOut.totalErrorMessage="Произошла ошибка, сервер вернул code:"+codeBox.code+" description:"+codeBox.description;
+
+        // Проверка общего кода ошибки
+        if (bodyV2.code != null) {
+            mOut.totalErrorMessage = "Неизвестная ошибка при статусе 200. code: " + bodyV2.code + " json: " + json;
             return mOut;
         }
-        if(codeBox.isCheckedOffline){
+
+        if (bodyV2.codesResponse == null || bodyV2.codesResponse.isEmpty()) {
+            mOut.totalErrorMessage = "Ответ содержит пустой массив codesResponse";
+            return mOut;
+        }
+
+        CodesResponse codeBox = bodyV2.codesResponse.get(0);
+
+        // Проверка результата внутри codesResponse
+        if (codeBox.code != 0 || !"ok".equals(codeBox.description)) {
+            mOut.totalErrorMessage = "Сервер вернул ошибку: code=" + codeBox.code + ", description=" + codeBox.description;
+            return mOut;
+        }
+
+        // Обработка случая проверки в оффлайне
+        if (Boolean.TRUE.equals(codeBox.isCheckedOffline)) {
             for (ItemCode code : codeBox.codes) {
-                MInItems mIn= UtilsPiot.getMInItem(mInItems,code.cis);
-                MOutItems mOutInner=new MOutItems();
-                mOutInner.descriptionCase =mIn!=null?mIn.descriptionCase :null;
-                mOutInner.idCase=mIn!=null?mIn.idCase:null;
-                mOutInner.km=code.cis;
-                mOutInner.permitSale=!code.isBlocked;
-                mOutInner.tag_1265=  "UUID="+ codeBox.reqId+
-                        "&Time="+ codeBox.reqTimestamp+
-                        "&Inst="+ codeBox.inst+
-                        "&Ver="+ codeBox.version;
-                if(!mOutInner.permitSale){
-                    mOutInner.errorMessage="Продажа заблокирована в локальном модуле.";
-                }
-                mOut.itemsList.add(mOutInner);
+                MInItems mIn = UtilsPiot.getMInItem(mInItems, code.cis);
+                MOutItems outItem = createMOutItemFromOffline(code, mIn,codeBox);
+                mOut.itemsList.add(outItem);
             }
             return mOut;
-
         }
+
+        // Онлайн-режим: обработка через ValidateItem
         for (ItemCode itemCode : codeBox.codes) {
+            MOutItems mOutItem = new ValidateItem().validate(itemCode);
+            MInItems mIn = UtilsPiot.getMInItem(mInItems, mOutItem.km);
 
-            MOutItems mOutInner=new ValidateItem().validate(itemCode);
-            MInItems mIn= UtilsPiot.getMInItem(mInItems,mOutInner.km);
-            mOutInner.descriptionCase =mIn!=null?mIn.descriptionCase :null;
-            mOutInner.idCase=mIn!=null?mIn.idCase:null;
-            mOutInner.tag_1265=  "UUID="+ codeBox.reqId+
-                    "&Time="+ codeBox.reqTimestamp;
-            mOut.itemsList.add(mOutInner);
+            // Дополнение метаданных из входных данных
+            if (mIn != null) {
+                mOutItem.descriptionCase = mIn.descriptionCase;
+                mOutItem.idCase = mIn.idCase;
+            }
+
+            // Формирование тега 1265 (без version и inst, так как не используется в онлайн)
+            mOutItem.tag_1265 = String.format("UUID=%s&Time=%d", codeBox.reqId, codeBox.reqTimestamp);
+
+            mOut.itemsList.add(mOutItem);
         }
-
-
 
         return mOut;
+    }
+
+    /**
+     * Создаёт объект результата для случая оффлайн-проверки.
+     */
+    private MOutItems createMOutItemFromOffline(ItemCode code, MInItems mIn,CodesResponse codeBox) {
+        MOutItems outItem = new MOutItems();
+        outItem.km = code.cis;
+        outItem.permitSale = !code.isBlocked;
+        outItem.errorMessage = code.isBlocked ? "Продажа заблокирована в локальном модуле." : null;
+
+        if (mIn != null) {
+            outItem.descriptionCase = mIn.descriptionCase;
+            outItem.idCase = mIn.idCase;
+        }
+
+        outItem.tag_1265 = String.format(
+                "UUID=%s&Time=%d&Inst=%s&Ver=%s",
+                codeBox.reqId, codeBox.reqTimestamp, codeBox.inst, codeBox.version
+        );
+
+        return outItem;
     }
 }

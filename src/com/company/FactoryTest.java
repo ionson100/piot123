@@ -16,6 +16,7 @@ public class FactoryTest {
             items.descriptionCase ="Запрет продажи товара при отсутствии в информационной системе мониторинга сведений о его нанесении";
             hashMap.put("5.1",items);
         }
+
         {
             MInItems items=new MInItems();
             items.km="0104670540176099215LnOjv\u001D93dGVz";
@@ -25,6 +26,7 @@ public class FactoryTest {
         }
 
         {
+
             MInItems items=new MInItems();
             items.km="010462930887704421DzkcYt2\u001D8005090000\u001D93dGVz";
             items.idCase="5.3";
