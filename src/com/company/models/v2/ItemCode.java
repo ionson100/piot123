@@ -82,7 +82,6 @@ public class ItemCode {
      */
     public int productWeight;
 
-
     /**
      *  Производственный ветеринарный сопроводительный документ
      *  Возвращается только для товарной группы «Молочная продукция» (не возвращается для товаров из Республики Беларусь)
@@ -138,10 +137,6 @@ public class ItemCode {
      */
     public int errorCode;
 
-
-
-
-
     /**
      *  (+) Признак контроля прослеживаемости в товарной группе
      *  Возможные значения: true — контроль прослеживаемости в товарной группе для данного КИ / КиЗ включен;
@@ -154,7 +149,6 @@ public class ItemCode {
      * Возможные значения: true — товар продан; false — товар не продан
      */
     public boolean sold;
-
 
     /**
      *  (-) Признак использования причин выбытия, разрешающих продажу КМ
@@ -201,7 +195,6 @@ public class ItemCode {
      */
     public int soldUnitCount;
 
-
     /**
      * Тип упаковки
      * См. «Справочник "Типы упаковки"». Для товарной группы «Товары из натурального меха» значение всегда «UNIT»
@@ -232,7 +225,6 @@ public class ItemCode {
      */
     public String productionBatchNumber;
 
-
     /**
      *  Заводской серийный номер
      *  Параметр возвращается только для товарной группы «Медицинские изделия»
@@ -245,12 +237,8 @@ public class ItemCode {
      */
     public int packageQuantity=10;
 
-
     private String serverErrorMessage(){
         switch (errorCode){
-            case 0:{
-                return null;
-            }
             case 1:{
                 return "ошибка валидации КМ";
             }
@@ -290,7 +278,6 @@ public class ItemCode {
         }
     }
 
-
     public String getErrorMessage(String altMessage){
         String prefix="Продажа заперещена. Причина: ";
         String s=serverErrorMessage();
@@ -299,10 +286,6 @@ public class ItemCode {
         else
             return prefix+ s;
     }
-
-
-
-
 
 }
 

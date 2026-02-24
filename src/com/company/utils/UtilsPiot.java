@@ -5,8 +5,6 @@ import com.company.models.MInItems;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -26,7 +24,7 @@ public class UtilsPiot {
 
     public final static String CONTENT_TYPE="application/json";
     public static final String TOKEN ="4415ec48-8096-4a03-ab46-49bac3557f86";
-    public static final String AUTHORIZATION ="Basic xxxxxxx";
+    public static final String AUTHORIZATION ="Basic YnNyOjMxMjg3Mw==";
 
     public static String CodeToBase64(String km){
         byte[] originalBytes = km.getBytes(StandardCharsets.UTF_8);

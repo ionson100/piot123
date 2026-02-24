@@ -8,18 +8,14 @@ import com.company.validator.MainValidator;
 import com.google.gson.Gson;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class MainRequestPiot {
 
-    class ClientInfo{
+    static class ClientInfo{
         //Наименование ПМСР (кассового ПО)
         String name;
         //Версия ПМСР (кассового ПО)
@@ -52,7 +48,7 @@ class MainRequestPiot {
                 //добавляем коды as Base64
                 tempBody.codes.add(UtilsPiot.CodeToBase64(tempProductKmPiot.km));
             }
-            tempBody.client_info=new ClientInfo();
+            tempBody.client_info= new ClientInfo();
             tempBody.client_info.id= UtilsPiot.ID;
             tempBody.client_info.name= UtilsPiot.NAME;
             tempBody.client_info.version= UtilsPiot.VERSION;
@@ -64,10 +60,6 @@ class MainRequestPiot {
             String jsonBody=gson.toJson(tempBody);
 
             byte[] postDataBytes=jsonBody.getBytes(StandardCharsets.UTF_8);
-
-
-
-
 
             URL u = new URL(UtilsPiot.URL);
             conn = (HttpsURLConnection) u.openConnection();
@@ -82,57 +74,55 @@ class MainRequestPiot {
             //получаем статус
             status = conn.getResponseCode();
 
+
             //получаем ответ
             String response=UtilsPiot.GetHttpBody(conn);
 
-            //проверяем ответ
-            MOut mOut=new MainValidator().validate(status,response,mInItems);
-
-            //если все ок, то возвращаем результат
-            iResult.action(mOut);
-
-
-
-        } catch (java.net.SocketTimeoutException e) {
-            // получаем таймаут, лезем в локальный модуль
-            MainRequestLocalModule.LocalResponse localResponse= new MainRequestLocalModule().check(mInItems);
-            MOut mOut=new MOut();
-            if(localResponse.totalError!=null){
-                mOut.totalErrorMessage=localResponse.totalError;
-                iResult.action(mOut);
-
-            }else {
-
-
-                // формируем ответ
-
-                    mOut.itemsList=new ArrayList<>(localResponse.codeItems.size());
-                try{
-                    for (MainRequestLocalModule.LocalResponseCodeItem codeItem : localResponse.codeItems) {
-                        MOutItems mOutItems=new MOutItems();
-                        MInItems mIn= UtilsPiot.getMInItem(mInItems,codeItem.cis);
-
-                        mOutItems.descriptionCase =mIn!=null?mIn.descriptionCase :null;
-                        mOutItems.idCase=mIn!=null?mIn.idCase:null;
-                        mOutItems.km=mIn!=null?mIn.km:codeItem.cis;
-                        mOutItems.tag_1265=codeItem.tag_1265;
-                        mOutItems.permitSale=codeItem.permitSale;
-                        mOutItems.errorMessage=codeItem.errorMessage;
-                        mOut.itemsList.add(mOutItems);
-                    }
-                    //возвращаем результат
-                    iResult.action(mOut);
-                }catch (Exception e1){
-                    mOut.totalErrorMessage="Ошибка при формировании результата из локального модуля. "+e1.getMessage();
-                    iResult.action(mOut);
-                    e.printStackTrace();
+            switch (status){
+                case 200:{
+                    iResult.action(new MainValidator().validate(response,mInItems));
+                    break;
                 }
+                case 404:{
+                    // не тестил на реале, но эмулятор выдает 404, при ошибке, например ошиблись версией
+                    MOut mOut=new MOut();
+                    mOut.totalErrorMessage="Путь  Url: "+ UtilsPiot.URL +" не верный";
+                    iResult.action(mOut);
+                    break;
+                }
+                case 203:{
+                    MOut mOut=new MOut();
+                    for (MInItems item : mInItems) {
+                        MOutItems m=new MOutItems();
+                        m.descriptionCase =item.descriptionCase;
+                        m.km=item.km;
+                        m.idCase=item.idCase;
+                        m.permitSale=true;
+                        mOut.itemsList.add(m);
+                    }
+                    iResult.action(mOut);
+                }
+                default:{
 
+                    // 4хх оибка
+                    if(status>399&&status<500){
+                        MOut mOut=new MOut();
+                        mOut.totalErrorMessage="Произошла ошибка, сервер вернул код:"+status+System.lineSeparator()+response;
+                        iResult.action(mOut);
+                        break;
+                    }
+                    // Todo По спецификации модуль не должен возвращать 5хх, только 400 203 200
+                    // но разработчики есп решили что можно, не понятно, надо ли за ними подтирать заднизу за 5хх
+                    // пока просто лезу в локальный модуль при 5хх
+                    iResult.action(proxyLocal(mInItems));
+                }
 
             }
 
+        } catch (java.net.SocketTimeoutException e) {
+            // получаем таймаут, лезем в локальный модуль
+            iResult.action(proxyLocal(mInItems));
         } catch (Exception e) {
-
             //если ошибка в ответе piot, то возвращаем ошибку
             MOut mOut=new MOut();
             mOut.totalErrorMessage=e.getMessage();
@@ -142,6 +132,39 @@ class MainRequestPiot {
             // закрываем соединение
             if (conn != null) {
                 conn.disconnect();
+            }
+        }
+    }
+
+    // Обращение для проверки через локальный модуль
+    MOut proxyLocal(List<MInItems> mInItems){
+        MainRequestLocalModule.LocalResponse localResponse= new MainRequestLocalModule().check(mInItems);
+        MOut mOut=new MOut();
+        if(localResponse.totalError!=null){
+            mOut.totalErrorMessage=localResponse.totalError;
+            return mOut;
+
+        }else {
+            // формируем ответ
+            mOut.itemsList=new ArrayList<>(localResponse.codeItems.size());
+            try{
+                for (MainRequestLocalModule.LocalResponseCodeItem codeItem : localResponse.codeItems) {
+                    MOutItems mOutItems=new MOutItems();
+                    MInItems mIn= UtilsPiot.getMInItem(mInItems,codeItem.cis);
+                    mOutItems.descriptionCase =mIn!=null?mIn.descriptionCase :null;
+                    mOutItems.idCase=mIn!=null?mIn.idCase:null;
+                    mOutItems.km=mIn!=null?mIn.km:codeItem.cis;
+                    mOutItems.tag_1265=codeItem.tag_1265;
+                    mOutItems.permitSale=codeItem.permitSale;
+                    mOutItems.errorMessage=codeItem.errorMessage;
+                    mOut.itemsList.add(mOutItems);
+                }
+                //возвращаем результат
+                return mOut;
+            }catch (Exception e1){
+                e1.printStackTrace();
+                mOut.totalErrorMessage="Ошибка при формировании результата из локального модуля. "+e1.getMessage();
+                return mOut;
             }
         }
     }

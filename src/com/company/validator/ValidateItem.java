@@ -15,13 +15,13 @@ class ValidateItem extends BaseValidator {
         MOutItems mOut=new MOutItems();
         mOut.km=code.cis;
 
-        //TODO вопрос
-        // Стоит ли это делать здесь? Ане при добавления в чек?
-        if(checkLocalSales(code.cis)==true){
-            mOut.errorMessage="Продукт с кодом: "+code.cis+ " был продан ранее.";
-            mOut.permitSale=false;
-            return mOut;
-        }
+        ////TODO вопрос
+        //// Стоит ли это делать здесь? Ане при добавления в чек?
+        //if(checkLocalSales(code.cis)==true){
+        //    mOut.errorMessage="Продукт с кодом: "+code.cis+ " был продан ранее.";
+        //    mOut.permitSale=false;
+        //    return mOut;
+        //}
 
         if(code.found==false){
             mOut.errorMessage=code.getErrorMessage("Код   не найден в системе ГИС МТ");
@@ -89,20 +89,14 @@ class ValidateItem extends BaseValidator {
         //2022-12-22 12:16:00
         if(codePiot.expireDate!=null){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-
                 Date d = sdf.parse(codePiot.expireDate);
-
                 Date curDate=new Date();
                 if(d.getTime()<curDate.getTime()){
-
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                     String formattedDate = formatter.format(d);
                     return "Продукт просрочен."+System.lineSeparator()+
                             "Дата окончания реализации: "+formattedDate;
-
                 }
-
         }
 
         return null;

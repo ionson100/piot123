@@ -1,7 +1,6 @@
 package com.company;
 
-import com.company.models.Lm.LmItemCode;
-import com.company.models.Lm.LmListCode;
+
 import com.company.models.MInItems;
 import com.company.utils.UtilsPiot;
 import com.google.gson.Gson;
@@ -15,8 +14,14 @@ import java.util.List;
 
  class MainRequestLocalModule {
 
+     static class LmListCode {
+         public List<LmItemCode> cis_list=new ArrayList<>();
+     }
+     static class LmItemCode {
+         public String cis;
+     }
 
-    class LocalResponseCodeItem{
+    static class LocalResponseCodeItem{
         String cis;
         boolean permitSale;
         String errorMessage;
@@ -30,7 +35,7 @@ import java.util.List;
 
     }
 
-    public class Code{
+    public static class Code{
         boolean sold;
         boolean isBlocked;
         String gtin;
@@ -83,8 +88,8 @@ import java.util.List;
 
             URL u = new URL(UtilsPiot.URL_LM);
             conn = (HttpURLConnection) u.openConnection();
-            conn.setReadTimeout(30000 /*milliseconds*/);
-            conn.setConnectTimeout(30000 /* milliseconds */);
+            conn.setReadTimeout(3000 /*milliseconds*/);
+            conn.setConnectTimeout(3000 /* milliseconds */);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept", UtilsPiot.CONTENT_TYPE);
             conn.setRequestProperty("Authorization", UtilsPiot.AUTHORIZATION);
@@ -121,7 +126,7 @@ import java.util.List;
 
             }
             for (Code code : result.codes) {
-                LocalResponseCodeItem codeItem=new LocalResponseCodeItem();
+                LocalResponseCodeItem codeItem= new LocalResponseCodeItem();
                 codeItem.cis=code.cis;
                 codeItem.permitSale=!code.isBlocked;
                 if(!codeItem.permitSale){

@@ -21,7 +21,7 @@ class ValidatePrice {
        }
    }
     /**
-     * Проверка  табачной группы
+     * Проверка табачной группы
      */
     private static void validatePrice3(MOutItems mOut,ItemCode code){
         if(!code.groupIds.contains(3)) {

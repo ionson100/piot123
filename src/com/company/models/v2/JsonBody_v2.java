@@ -7,6 +7,10 @@ import java.util.ArrayList;
  */
 public class JsonBody_v2 {
     public ArrayList<CodesResponse> codesResponse;
+
+    public  Integer code;
+
+    public String message;
 }
 
 

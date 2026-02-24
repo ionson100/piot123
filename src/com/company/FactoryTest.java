@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FactoryTest {
-    HashMap<String, MInItems> hashMap=new HashMap<>();
+   final HashMap<String, MInItems> hashMap=new HashMap<>();
     public FactoryTest initFactory(){
         {
             MInItems items=new MInItems();
@@ -38,7 +38,7 @@ public class FactoryTest {
             items.idCase="5.4";
             items.descriptionCase ="Успешная продажа табачной продукции (цена более 135 руб.\n" +
                     "за пачку для соблюдения законодательства РФ), потребительская или\n" +
-                    "групповая упаковка которых относится к временно непрослеживаемой\n" +
+                    "групповая упаковка которых относится к временно не прослеживаемой\n" +
                     "(т.н. «серая зона»)";
             hashMap.put("5.4",items);
         }
@@ -242,7 +242,7 @@ public class FactoryTest {
         for (String key : cas) {
             MInItems value=hashMap.get(key);
             if(value==null){
-                throw  new Exception("Кейса:"+key+" не сушествует в пуле");
+                throw  new Exception("Кейса:"+key+" не существует в пуле");
             }
             mInItems.add(value);
         }
