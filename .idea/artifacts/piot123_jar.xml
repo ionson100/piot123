@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="piot123:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/piot123_jar</output-path>
+    <root id="archive" name="piot123.jar">
+      <element id="module-output" name="piot123" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/jar/gson-2.8.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
