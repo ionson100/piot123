@@ -131,7 +131,7 @@ class MainRequestPiot {
     }
 
     /**
-     * Возвращает успешный ответ для всех товаров (аналог 203)
+     * Возвращает успешный ответ для всех товаров 
      */
     private void returnSuccessForAll(IResult<MOut> iResult, List<MInItems> mInItems) {
         MOut mOut = new MOut();
