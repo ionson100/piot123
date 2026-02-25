@@ -1,11 +1,19 @@
 package com.company.utils;
 
 import com.company.models.MInItems;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.List;
 
@@ -14,8 +22,12 @@ import java.util.List;
  */
 public class UtilsPiot {
 
-    // Основной URL API PIOT
+
+    //Остовой url для проверки локально
+    public static final String URL_LOCAL="https://localhost:51401/api/v2/codes/check";
+    // Основной URL API PIOT эмулятор
     public static final String URL = "https://esm-emu.ao-esp.ru/api/v2/codes/check";
+    //public static final String URL = "https://tspiot.sandbox.crptech.ru/api/v2/codes/check";
     // URL локального модуля
     public static final String URL_LM = "http://localhost:5995/api/v2/cis/outCheck";
 
@@ -26,8 +38,8 @@ public class UtilsPiot {
 
     // Заголовки HTTP-запросов
     public static final String CONTENT_TYPE = "application/json";
-    public static final String TOKEN = "5b0ff425-697d-42ea-bb91-16784d9af9f6";
-    public static final String AUTHORIZATION = "Basic Yхххх"; // TODO: заменить на реальное значение
+    public static final String TOKEN = "a24d98fb-88b6-479c-b5d1-f3ad986bd1f2";//TODO: заменить на реальное значение
+    public static final String AUTHORIZATION = "Basic xxxxxxxxxx"; // TODO: заменить на реальное значение
 
     /**
      * Кодирует строку КИЗ в формат Base64.
@@ -102,5 +114,29 @@ public class UtilsPiot {
             }
         }
         return null;
+    }
+
+    public static void disableCertificateValidation() throws Exception {
+
+            // 1. Создаем TrustManager, который не проверяет сертификаты
+            TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() { return null; }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                    }
+            };
+
+            // 2. Инициализируем SSLContext этим TrustManager
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            // 3. Устанавливаем его как глобальный сокет-фактор по умолчанию
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // 4. Отключаем проверку соответствия имени хоста (HostnameVerifier)
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+
+
     }
 }

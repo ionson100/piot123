@@ -1,5 +1,7 @@
 package com.company.models;
 
+import com.company.models.v2.JsonBody_v2;
+
 import java.util.List;
 
 /**
@@ -17,6 +19,8 @@ public class MOut {
      * Список результатов проверки.
      */
     public List<MOutItems> itemsList;
+
+    public JsonBody_v2 bodyV2;
 
     /**
      * Конструктор по умолчанию — инициализирует объект с пустыми полями.
@@ -43,4 +47,13 @@ public class MOut {
                 ", itemsList=" + (itemsList != null ? itemsList.size() + " items" : "null") +
                 '}';
     }
+
+    public String getStringForLog(){
+	  StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append("Результат проверки кодов:").append(System.lineSeparator());
+      for (MOutItems item : itemsList) {
+          stringBuilder.append(item.getStringForLog()).append(System.lineSeparator());
+      }
+      return stringBuilder.toString();
+   }
 }

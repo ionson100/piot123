@@ -44,14 +44,21 @@ class MainRequestPiot {
      * @param mInItems Список входных элементов (коды маркировки + метаданные для теста)
      * @param iResult  Колбэк для возврата результата
      */
-    void RequestPiot(@NotNull List<MInItems> mInItems, IResult<MOut> iResult) {
+    void RequestPiot(@NotNull List<MInItems> mInItems,@NotNull StringBuilder log,@NotNull IResult<MOut> iResult) {
+        log.append(System.lineSeparator()).
+                append("************** Проверка кодов с помощью ТС ПИоТ **************").
+                append(System.lineSeparator()).
+                append("Список проверяемых кодов:").
+                append(System.lineSeparator());
         HttpsURLConnection conn = null;
         try {
             // Формирование тела запроса
             TempBodyPiot tempBody = new TempBodyPiot();
             tempBody.codes = new ArrayList<>();
             for (MInItems item : mInItems) {
-                tempBody.codes.add(UtilsPiot.CodeToBase64(item.km));
+                String cisBase64 = UtilsPiot.CodeToBase64(item.km);
+                tempBody.codes.add(cisBase64);
+                log.append(item.km).append(" ["+cisBase64+"]").append(System.lineSeparator());
             }
 
             tempBody.client_info = new ClientInfo();
@@ -66,7 +73,12 @@ class MainRequestPiot {
             byte[] postDataBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
 
             // Установка соединения
-            URL url = new URL(UtilsPiot.URL);
+
+            String urlCore=Main.DEBUG_LOCAL?UtilsPiot.URL_LOCAL:UtilsPiot.URL;
+            log.append("URL TC РИоТ: "+urlCore).append(System.lineSeparator());
+            log.append("Тело запроса:" ).append(System.lineSeparator()).append(jsonBody).append(System.lineSeparator());
+            URL url = new URL(urlCore);
+
             conn = (HttpsURLConnection) url.openConnection();
             conn.setReadTimeout(3500);
             conn.setConnectTimeout(3500);
@@ -78,28 +90,70 @@ class MainRequestPiot {
             conn.connect();
 
             int status = conn.getResponseCode();
+
+
+
+
+            log.append("Http code: ").append(status).append(System.lineSeparator());
             String response = UtilsPiot.GetHttpBody(conn);
+            log.append("Тело ответа:").append(System.lineSeparator()).append(response).append(System.lineSeparator());
 
             // Обработка ответа по статусу
             switch (status) {
                 case 200:
-                    iResult.action(new MainValidator().validate(response, mInItems));
+                    MOut mOut = new MainValidator().validate(response, mInItems);
+                    if(mOut.totalErrorMessage!=null) {
+                        log.append("Произошла общая ошибка при проверке кодов: ").
+                                append(mOut.totalErrorMessage).
+                                append(System.lineSeparator());
+                    }else {
+                        if(mOut.bodyV2.codesResponse.get(0).isCheckedOffline){
+                            log.append("Кода были проверены локально.").append(System.lineSeparator());
+                        }else {
+                            log.append("Кода были проверены online.").append(System.lineSeparator());
+                        }
+
+                        log.append(mOut.getStringForLog()).append(System.lineSeparator());
+                    }
+                    iResult.action(mOut);
                     break;
 
                 case 404:
-                    handleError(iResult, "Путь Url: " + UtilsPiot.URL + " не найден (404)");
+                    if(Main.DEBUG_LOCAL){
+                        String errorMessage="Путь Url: " + UtilsPiot.URL_LOCAL + " не найден (404)";
+                        log.append("Ошибка проверки кодов:"+errorMessage).append(System.lineSeparator());
+                        handleError(iResult, errorMessage);
+
+                    }else {
+                        String errorMessage="Путь Url: " + UtilsPiot.URL + " не найден (404)";
+                        log.append("Ошибка проверки кодов:"+errorMessage).append(System.lineSeparator());
+                        handleError(iResult,errorMessage );
+                    }
+
                     break;
 
                 case 203:
-                    returnSuccessForAll(iResult, mInItems); // Разрешено для всех
+                    log.append("ТС_ПИоТ вернул аварийный режим 203").append(System.lineSeparator());
+                    returnSuccessForAll(iResult, mInItems,log); // Разрешено для всех
                     break;
 
                 default:
                     if (status >= 400 && status < 500) {
-                        handleError(iResult, "Клиентская ошибка: код " + status + "\n" + response);
+                        String errorText="Клиентская ошибка: код " + status + System.lineSeparator() + response;
+                        log.append(errorText).append(System.lineSeparator());
+                        handleError(iResult,errorText );
                     } else {
                         // Серверные ошибки (5xx): fallback на локальный модуль
-                        iResult.action(proxyLocal(mInItems));
+                        log.append("ТС ПИоТ вернул статус: "+status+" Переходим к проверке через локальный модуль.").append(System.lineSeparator());
+                        MOut mOut1=proxyLocal(mInItems,log);
+                        if(mOut1.totalErrorMessage!=null) {
+                            log.append("Произошла ошибка при проверке через локальный модуль: "+
+                                    mOut1.totalErrorMessage).append(System.lineSeparator());
+                        }else {
+                            log.append(mOut1.getStringForLog()).append(System.lineSeparator());
+                        }
+
+                        iResult.action(mOut1);
                     }
                     break;
             }
@@ -107,7 +161,19 @@ class MainRequestPiot {
             // под вопросом UnknownHostException, стоить ли его обрабатывать
         } catch (java.net.SocketTimeoutException|UnknownHostException e) {
             // Таймаут соединения — используем локальный модуль
-            iResult.action(proxyLocal(mInItems));
+            log.append("ТС ПИоТ ошибка подключения либо тайм-аут."+
+                    System.lineSeparator()+
+                    "Переходим к проверке через локальный модуль.").append(System.lineSeparator());
+
+
+            MOut mOut1=proxyLocal(mInItems,log);
+            if(mOut1.totalErrorMessage!=null) {
+                log.append("Произошла ошибка при проверке через локальный модуль: "+
+                        mOut1.totalErrorMessage).append(System.lineSeparator());
+            }else {
+                log.append(mOut1.getStringForLog()).append(System.lineSeparator());
+            }
+            iResult.action(mOut1);
         } catch (Exception e) {
             // Любая другая ошибка (например, парсинг, сеть)
             MOut errorOut = new MOut();
@@ -133,7 +199,7 @@ class MainRequestPiot {
     /**
      * Возвращает успешный ответ для всех товаров 
      */
-    private void returnSuccessForAll(IResult<MOut> iResult, List<MInItems> mInItems) {
+    private void returnSuccessForAll(IResult<MOut> iResult, List<MInItems> mInItems, StringBuilder log) {
         MOut mOut = new MOut();
         mOut.itemsList = new ArrayList<>();
 
@@ -145,6 +211,8 @@ class MainRequestPiot {
             outItem.permitSale = true;
             mOut.itemsList.add(outItem);
         }
+        log.append(mOut.getStringForLog());
+
 
         iResult.action(mOut);
     }
@@ -152,8 +220,8 @@ class MainRequestPiot {
     /**
      * Fallback-метод: запрос к локальному модулю при недоступности PIOT
      */
-    MOut proxyLocal(List<MInItems> mInItems) {
-        MainRequestLocalModule.LocalResponse localResponse = new MainRequestLocalModule().check(mInItems);
+    MOut proxyLocal(List<MInItems> mInItems,StringBuilder log) {
+        MainRequestLocalModule.LocalResponse localResponse = new MainRequestLocalModule().check(mInItems,log);
         MOut mOut = new MOut();
 
         if (localResponse.totalError != null) {

@@ -35,6 +35,7 @@ public class MainValidator extends BaseValidator {
         JsonBody_v2 bodyV2;
         try {
             bodyV2 = new Gson().fromJson(json, JsonBody_v2.class);
+            mOut.bodyV2=bodyV2;
         } catch (Exception e) {
             mOut.totalErrorMessage = "Ошибка парсинга JSON: " + e.getMessage();
             return mOut;
@@ -53,11 +54,6 @@ public class MainValidator extends BaseValidator {
 
         CodesResponse codeBox = bodyV2.codesResponse.get(0);
 
-        // Проверка результата внутри codesResponse
-        if (codeBox.code != 0 || !"ok".equals(codeBox.description)) {
-            mOut.totalErrorMessage = "Сервер вернул ошибку: code=" + codeBox.code + ", description=" + codeBox.description;
-            return mOut;
-        }
 
         // Обработка случая проверки в оффлайне
         if (Boolean.TRUE.equals(codeBox.isCheckedOffline)) {
@@ -69,10 +65,18 @@ public class MainValidator extends BaseValidator {
             return mOut;
         }
 
+        // Проверка результата внутри codesResponse
+        if (codeBox.code != 0 || !"ok".equals(codeBox.description)) {
+            mOut.totalErrorMessage = "Сервер вернул ошибку: code=" + codeBox.code + ", description=" + codeBox.description;
+            return mOut;
+        }
+
+
         // Онлайн-режим: обработка через ValidateItem
         for (ItemCode itemCode : codeBox.codes) {
             MOutItems mOutItem = new ValidateItem().validate(itemCode);
             MInItems mIn = UtilsPiot.getMInItem(mInItems, mOutItem.km);
+
 
             // Дополнение метаданных из входных данных
             if (mIn != null) {

@@ -3,9 +3,15 @@ package com.company.models;
 /**
  * Результат проверки кода маркировки.
  * Содержит статус продажи, причину отказа (если есть), тег 1265 и цену для табачной продукции.
+ * Вимание! Прверку лучше осуществлять по одному коду, при пакетной проверке модуль можен во
  */
 public class MOutItems extends MInItems {
 
+    /**
+     * ID группы товара из справочника товаров
+     * Внимание!, при пакетной проверке он на некоторые кода может не возвращаться
+     */
+    public Integer codeGroup;
     /**
      * Разрешение на продажу: true — можно продать, false — запрещено.
      */
@@ -65,6 +71,23 @@ public class MOutItems extends MInItems {
                 ", tag_1265='" + tag_1265 + '\'' +
                 ", mrcTobacco=" + (mrcTobacco != null ? String.format("%.2f", mrcTobacco) : "null") +
                 '}';
+    }
+    public String getStringForLog(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Код: ").append(km).append(System.lineSeparator());
+        sb.append("Продажа: ").append((permitSale==true?"разрешить":"запретить")).append(System.lineSeparator());
+        if(permitSale==false){
+            sb.append("Причина: ").append(errorMessage).append(System.lineSeparator());
+        }
+        if(mrcTobacco!=null){
+            sb.append("Цена за единицу руб.: ").append(String.format("%.2f", mrcTobacco)).append(System.lineSeparator());
+        }
+        if(codeGroup!=null){
+            sb.append("Код группы: ").append(codeGroup).append(System.lineSeparator());
+        }
+        sb.append("Тэг 1265: ").append(tag_1265).append(System.lineSeparator());
+
+        return sb.toString();
     }
 
     @Override

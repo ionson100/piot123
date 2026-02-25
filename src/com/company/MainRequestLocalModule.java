@@ -65,9 +65,11 @@ class MainRequestLocalModule {
      * Отправляет список кодов в локальный модуль и возвращает результат проверки.
      *
      * @param mInItems Список входных элементов (с кодами маркировки)
+     * @param log
      * @return LocalResponse — результат проверки или ошибка
      */
-    LocalResponse check(List<MInItems> mInItems) {
+    LocalResponse check(List<MInItems> mInItems, StringBuilder log) {
+
         LocalResponse localResponse = new LocalResponse();
         HttpURLConnection conn = null;
 
@@ -82,7 +84,9 @@ class MainRequestLocalModule {
 
             Gson gson = new Gson();
             String jsonBody = gson.toJson(bodyListCode);
-
+            log.append("Проверка через локальный модуль.").append(System.lineSeparator());
+            log.append("URL LM: "+UtilsPiot.URL_LM).append(System.lineSeparator());
+            log.append("Тело запроса:").append(System.lineSeparator()).append(jsonBody).append(System.lineSeparator());
             // Настройка соединения
             URL url = new URL(UtilsPiot.URL_LM);
             conn = (HttpURLConnection) url.openConnection();
@@ -104,6 +108,8 @@ class MainRequestLocalModule {
             // Чтение ответа
             int status = conn.getResponseCode();
             String responseBody = UtilsPiot.GetHttpBody(conn);
+            log.append("Html код: " ).append(status).append(System.lineSeparator());
+            log.append("Тело ответа: ").append(responseBody).append(System.lineSeparator());
 
             if (status != 200) {
                 localResponse.totalError = "Ошибка обращения к локальному модулю: HTTP " + status + ". Ответ: " + responseBody;

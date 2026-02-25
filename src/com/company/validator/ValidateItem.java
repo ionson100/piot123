@@ -23,6 +23,11 @@ class ValidateItem extends BaseValidator {
      */
     MOutItems validate(ItemCode code) throws ParseException {
         MOutItems mOut = new MOutItems();
+
+        if(code.groupIds!=null&&code.groupIds.size() > 0){
+            mOut.codeGroup=code.groupIds.get(0);
+        }
+
         mOut.km = code.cis;
 
         // Код не найден в системе ГИС МТ
