@@ -8,6 +8,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Утилитарный класс с константами и вспомогательными методами для работы с PIOT и кодами маркировки.
@@ -24,7 +26,7 @@ public class UtilsPiot {
 
 
     //Остовой url для проверки локально
-    public static final String URL_LOCAL="https://localhost:51401/api/v2/codes/check";
+    public static final String URL_LOCAL = "https://localhost:51401/api/v2/codes/check";
     // Основной URL API PIOT эмулятор
     public static final String URL = "https://esm-emu.ao-esp.ru/api/v2/codes/check";
     //public static final String URL = "https://tspiot.sandbox.crptech.ru/api/v2/codes/check";
@@ -116,27 +118,55 @@ public class UtilsPiot {
         return null;
     }
 
+    // Применяется глобально !!
     public static void disableCertificateValidation() throws Exception {
 
-            // 1. Создаем TrustManager, который не проверяет сертификаты
-            TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        public X509Certificate[] getAcceptedIssuers() { return null; }
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+        // 1. Создаем TrustManager, который не проверяет сертификаты
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
                     }
-            };
 
-            // 2. Инициализируем SSLContext этим TrustManager
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
 
-            // 3. Устанавливаем его как глобальный сокет-фактор по умолчанию
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
 
-            // 4. Отключаем проверку соответствия имени хоста (HostnameVerifier)
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+        // 2. Инициализируем SSLContext этим TrustManager
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+        // 3. Устанавливаем его как глобальный сокет-фактор по умолчанию
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+        // 4. Отключаем проверку соответствия имени хоста (HostnameVerifier)
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
 
+    }
+
+    // Применяйте только к конкретному соединению, а не глобально
+    private static void setupConnectionForSelfSigned(HttpsURLConnection conn) throws Exception {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        conn.setSSLSocketFactory(sc.getSocketFactory());
+        conn.setHostnameVerifier((hostname, session) -> true);
     }
 }

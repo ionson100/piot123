@@ -85,7 +85,7 @@ class MainRequestLocalModule {
             Gson gson = new Gson();
             String jsonBody = gson.toJson(bodyListCode);
             log.append("Проверка через локальный модуль.").append(System.lineSeparator());
-            log.append("URL LM: "+UtilsPiot.URL_LM).append(System.lineSeparator());
+            log.append("URL LM: " + UtilsPiot.URL_LM).append(System.lineSeparator());
             log.append("Тело запроса:").append(System.lineSeparator()).append(jsonBody).append(System.lineSeparator());
             // Настройка соединения
             URL url = new URL(UtilsPiot.URL_LM);
@@ -108,7 +108,7 @@ class MainRequestLocalModule {
             // Чтение ответа
             int status = conn.getResponseCode();
             String responseBody = UtilsPiot.GetHttpBody(conn);
-            log.append("Html код: " ).append(status).append(System.lineSeparator());
+            log.append("Html код: ").append(status).append(System.lineSeparator());
             log.append("Тело ответа: ").append(responseBody).append(System.lineSeparator());
 
             if (status != 200) {
