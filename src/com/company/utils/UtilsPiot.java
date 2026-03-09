@@ -40,8 +40,8 @@ public class UtilsPiot {
 
     // Заголовки HTTP-запросов
     public static final String CONTENT_TYPE = "application/json";
-    public static final String TOKEN = "a24d98fb-88b6-479c-b5d1-f3ad986bd1f2";//TODO: заменить на реальное значение
-    public static final String AUTHORIZATION = "Basic xxxxxxxxxx"; // TODO: заменить на реальное значение
+    //public static final String TOKEN = "a24d98fb-88b6-479c-b5d1-f3ad986bd1f2";//TODO: заменить на реальное значение
+    //public static final String AUTHORIZATION = "Basic xxxxxxxxxx"; // TODO: заменить на реальное значение
 
     /**
      * Кодирует строку КИЗ в формат Base64.

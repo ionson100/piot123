@@ -3,6 +3,7 @@ package com.company;
 import com.company.models.MInItems;
 import com.company.utils.UtilsPiot;
 import com.google.gson.Gson;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -95,7 +96,8 @@ class MainRequestLocalModule {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", UtilsPiot.CONTENT_TYPE);
             conn.setRequestProperty("Accept", UtilsPiot.CONTENT_TYPE);
-            conn.setRequestProperty("Authorization", UtilsPiot.AUTHORIZATION);
+            Dotenv dotenv = Dotenv.load();
+            conn.setRequestProperty("Authorization", dotenv.get("AUTHORIZATION"));// todo тут должен быть ваш код авторизации Basic xxxxxxxxxx
             conn.setDoOutput(true);
 
             // Отправка тела запроса

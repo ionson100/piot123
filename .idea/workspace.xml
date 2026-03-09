@@ -12,17 +12,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="020151af-602c-46b3-8bf9-fc050aa2ce28" name="Default Changelist" comment="+1">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="020151af-602c-46b3-8bf9-fc050aa2ce28" name="Default Changelist" comment="+ setupConnectionForSelfSigned">
+      <change afterPath="$PROJECT_DIR$/src/jar/dotenv-java-2.3.2.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Code.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Code.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponseCodeItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponseCodeItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Result.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Root.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Root.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$ClientInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$ClientInfo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$TempBodyPiot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$TempBodyPiot.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/models/MOutItems.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/models/MOutItems.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/validator/ValidateItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/validator/ValidateItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/validator/MainValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/validator/MainValidator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/piot123.iml" beforeDir="false" afterPath="$PROJECT_DIR$/piot123.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/MainRequestLocalModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/MainRequestLocalModule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/MainRequestPiot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/MainRequestPiot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/utils/UtilsPiot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/utils/UtilsPiot.java" afterDir="false" />
@@ -306,21 +311,25 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/bsr/Загрузки/gigacode-jetbrains-26.1.715.zip",
+    "last_opened_file_path": "C:/Users/123/IdeaProjects/piot123/src/jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.37902483",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
@@ -328,6 +337,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\123\IdeaProjects\piot123\src\jar" />
       <recent name="$PROJECT_DIR$/src/jar" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -435,7 +445,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771943209035</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="+ setupConnectionForSelfSigned">
+      <option name="closed" value="true" />
+      <created>1773055349158</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773055349158</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -495,7 +513,8 @@
     <MESSAGE value="+ обработка 5хх" />
     <MESSAGE value="+1" />
     <MESSAGE value="+ comments added to the code" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ comments added to the code" />
+    <MESSAGE value="+ setupConnectionForSelfSigned" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ setupConnectionForSelfSigned" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

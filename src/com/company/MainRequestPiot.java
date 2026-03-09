@@ -7,6 +7,7 @@ import com.company.utils.UtilsPiot;
 import com.company.validator.MainValidator;
 import com.google.gson.Gson;
 import com.sun.istack.internal.NotNull;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
@@ -61,11 +62,12 @@ class MainRequestPiot {
                 log.append(item.km).append(" [").append(cisBase64).append("]").append(System.lineSeparator());
             }
 
+            Dotenv dotenv = Dotenv.load();
             tempBody.client_info = new ClientInfo();
             tempBody.client_info.id = UtilsPiot.ID;
             tempBody.client_info.name = UtilsPiot.NAME;
             tempBody.client_info.version = UtilsPiot.VERSION;
-            tempBody.client_info.token = UtilsPiot.TOKEN;
+            tempBody.client_info.token = dotenv.get("TOKEN");// todo тут должен быть ваш токен.
 
             // Сериализация в JSON
             Gson gson = new Gson();
