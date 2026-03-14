@@ -12,25 +12,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="020151af-602c-46b3-8bf9-fc050aa2ce28" name="Default Changelist" comment="+ setupConnectionForSelfSigned">
-      <change afterPath="$PROJECT_DIR$/src/jar/dotenv-java-2.3.2.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="020151af-602c-46b3-8bf9-fc050aa2ce28" name="Default Changelist" comment="+ .env">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Code.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Code.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponseCodeItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$LocalResponseCodeItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Root.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule$Root.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestLocalModule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$ClientInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$ClientInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$TempBodyPiot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot$TempBodyPiot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/MainRequestPiot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/validator/MainValidator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/validator/MainValidator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piot123.iml" beforeDir="false" afterPath="$PROJECT_DIR$/piot123.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/MainRequestLocalModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/MainRequestLocalModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/MainRequestPiot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/MainRequestPiot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/utils/UtilsPiot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/utils/UtilsPiot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/piot123/com/company/validator/ValidateItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/piot123/com/company/validator/ValidateItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/validator/ValidateItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/validator/ValidateItem.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -453,7 +440,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773055349158</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="+ .env">
+      <option name="closed" value="true" />
+      <created>1773066635829</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1773066635829</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -514,7 +509,19 @@
     <MESSAGE value="+1" />
     <MESSAGE value="+ comments added to the code" />
     <MESSAGE value="+ setupConnectionForSelfSigned" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ setupConnectionForSelfSigned" />
+    <MESSAGE value="+ .env" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ .env" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/validator/ValidatePrice.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

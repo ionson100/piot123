@@ -30,7 +30,7 @@ public class Main {
 
         // Инициализация и создание тестовых данных по заданным ID кейсов
         try {
-            mInItems = new FactoryTest().initFactory().buildRequest("5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", "5.10", "5.11", "5.12", "5.14");
+            mInItems = new FactoryTest().initFactory().buildRequest("5.25");//, "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", "5.10", "5.11", "5.12", "5.14");
         } catch (Exception e) {
             System.err.println("Ошибка при инициализации тестовых данных:");
             e.printStackTrace();

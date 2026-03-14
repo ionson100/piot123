@@ -100,7 +100,9 @@ class ValidateItem extends BaseValidator {
         ValidatePrice.validate(mOut, code);
 
         // Все проверки пройдены
-        mOut.permitSale = true;
+        if(mOut.errorMessage==null){
+            mOut.permitSale = true;
+        }
         return mOut;
     }
 
